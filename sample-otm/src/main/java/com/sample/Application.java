@@ -13,6 +13,7 @@ public class Application extends SpringBootServletInitializer {
 
 
 	public static void main(String[] args) {
+		System.setProperty("server.servlet.context-path", "/sample-otm");
 		SpringApplication.run(Application.class, args);
 	}
 
