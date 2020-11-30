@@ -6,6 +6,7 @@
 	<properties>
 		<project.version>2.0.19</project.version>
 		<java.version>1.8</java.version>
+		<flyway.version>6.5.5</flyway.version>
 	</properties>
 
 	<groupId>com.sample</groupId>
@@ -19,6 +20,7 @@
 		<module>sample-web</module>
 		<module>sample-otm</module>
 		<module>sample-mg</module>
+		<module>sample-db</module>
 	</modules>
 	
 	<parent>
@@ -27,5 +29,22 @@
 		<version>2.2.1.RELEASE</version>
 		<relativePath />
 	</parent>
+	
+	<dependencies>
+			<dependency>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-core</artifactId>
+				<version>${flyway.version}</version>
+			</dependency>
+			 <dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>provided</scope>
+		</dependency>
+    </dependencies>
 	
 </project>
