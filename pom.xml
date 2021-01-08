@@ -1,42 +1,94 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
 	<properties>
 		<project.version>2.0.19</project.version>
 		<java.version>1.8</java.version>
-		<flyway.version>6.5.5</flyway.version>
+		<flyway.version>3.2.1</flyway.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
 	<groupId>com.sample</groupId>
 	<artifactId>sample-parent</artifactId>
 	<version>2.0.19</version>
 	<packaging>pom</packaging>
 	<name>sample-parent</name>
-	
-	<modules>	
+	<modules>
 		<module>sample-rate-api</module>
 		<module>sample-web</module>
 		<module>sample-otm</module>
 		<module>sample-mg</module>
 		<module>sample-db</module>
 	</modules>
-	
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.2.1.RELEASE</version>
-		<relativePath />
+		<relativePath/>
 	</parent>
-	
+	<profiles>
+		<profile>
+			<id>local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<env>local</env>
+				<dbUrl>jdbc:mysql://localhost:3307/sampleTest?serverTimezone=UTC</dbUrl>
+				<dbSchema>sampleTest</dbSchema>
+				<test.dbUrl>${dbUrl}</test.dbUrl>
+				<test.dbSchema>${dbSchema}</test.dbSchema>
+				<dbFlySkip>false</dbFlySkip>
+				<dbFlyUrl>${dbUrl}</dbFlyUrl>
+				<dbFlySchema>${dbSchema}</dbFlySchema>
+			</properties>
+		</profile>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<env>dev</env>
+				<dbUrl>jdbc:mysql://52.23.170.105:3306/sampleTest</dbUrl>
+				<dbSchema>sampleTest</dbSchema>
+				<test.dbUrl>${dbUrl}</test.dbUrl>
+				<test.dbSchema>${dbSchema}</test.dbSchema>
+				<dbFlySkip>false</dbFlySkip>
+				<dbFlyUrl>${dbUrl}</dbFlyUrl>
+				<dbFlySchema>${dbSchema}</dbFlySchema>
+			</properties>
+		</profile>
+		<profile>
+			<id>local.flyway</id>
+			<properties>
+				<env>local.flyway</env>
+				<dbFlyUrl>jdbc:mysql://localhost:3307/sampleTest?serverTimezone=UTC</dbFlyUrl>
+				<dbFlySchema>sampleTest</dbFlySchema>
+			</properties>
+		</profile>
+		<profile>
+			<id>dev.flyway</id>
+			<properties>
+				<env>dev.flyway</env>
+				<dbFlyUrl>jdbc:mysql://52.23.170.105:3306/sampleTest</dbFlyUrl>
+				<dbFlySchema>sampleTest</dbFlySchema>
+			</properties>
+		</profile>
+		<profile>
+			<id>sonar</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<!-- Optional URL to server. Default value is http://localhost:9000 -->
+				<sonar.host.url> http://localhost:9000 </sonar.host.url>
+				<sonar.host.url> http://localhost:9000 </sonar.host.url>
+			</properties>
+		</profile>
+	</profiles>
 	<dependencies>
-			<dependency>
-				<groupId>org.flywaydb</groupId>
-				<artifactId>flyway-core</artifactId>
-				<version>${flyway.version}</version>
-			</dependency>
-			 <dependency>
+		<dependency>
+			<groupId>com.googlecode.flyway</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
 		</dependency>
@@ -45,6 +97,38 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>provided</scope>
 		</dependency>
-    </dependencies>
-	
+		<!--	<dependency>
+			<groupId>org.sonarsource.scanner.maven</groupId>
+			<artifactId>sonar-maven-plugin</artifactId>
+			<version>7.1</version>
+		</dependency> -->
+		<dependency>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>sonar-maven-plugin</artifactId>
+			<version>3.4.0.905</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.7.7.201606060606</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
